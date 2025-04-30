@@ -1,0 +1,33 @@
+import requests
+from bs4 import BeautifulSoup
+
+# URL của trang Sunwin
+url = 'https://sun.win/'  # Thay bằng URL thực tế của trang web bạn đang tham khảo
+
+# Gửi yêu cầu HTTP để lấy nội dung của trang
+response = requests.get(url)
+soup = BeautifulSoup(response.text, 'html.parser')
+
+# Phân tích và tìm các phần tử có chứa kết quả Tài hoặc Xỉu
+# Giả sử kết quả Tài/Xỉu được hiển thị trong các thẻ <button> có class="result-tai" hoặc class="result-xiu"
+ket_qua_tai_xiu = []
+
+# Tìm tất cả các thẻ <button> hoặc <div> có chứa kết quả Tài/Xỉu
+results = soup.find_all('button', class_='result-tai')  # Hoặc thay bằng thẻ <div>, <span> nếu có
+
+for result in results:
+    if 'Tài' in result.text:
+        ket_qua_tai_xiu.append('Tài')
+    elif 'Xỉu' in result.text:
+        ket_qua_tai_xiu.append('Xỉu')
+
+# Hiển thị kết quả đã thu thập
+print("Kết quả Tài/Xỉu:", ket_qua_tai_xiu)
+
+# Tính toán tỉ lệ Tài/Xỉu
+tai_count = ket_qua_tai_xiu.count('Tài')
+xiu_count = ket_qua_tai_xiu.count('Xỉu')
+total = len(ket_qua_tai_xiu)
+
+print(f'Tỉ lệ Tài: {tai_count / total:.2%}')
+print(f'Tỉ lệ Xỉu: {xiu_count / total:.2%}')
